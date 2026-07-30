@@ -1,14 +1,52 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
+
 
 namespace Axstrider.Toolkit.StateMachine
 {
     public class AxStateMachine
     {
+        public object Owner { get; }
+        public string Name  { get; }
         public IState CurrentState { get; private set; }
 
         private readonly Dictionary<Type, List<Transition>> transitions = new();
         private readonly List<Transition> anyTransitions = new();
+
+
+        // ==========================================================
+        //                      Constructor
+        // ==========================================================
+        #region Constructor
+
+        public AxStateMachine(object owner = null, string customName = null) 
+        { 
+            Owner = owner;
+
+            if (!string.IsNullOrEmpty(customName))
+            {
+                Name = customName;
+            }
+#if UNITY_EDITOR
+            else if (owner is MonoBehaviour mono)
+            {
+                Name = $"{mono.gameObject.name} ({mono.GetType().Name})";
+            }
+#endif
+            else if (owner != null)
+            {
+                Name = owner.GetType().Name;
+            }
+            else
+            {
+                Name = "StateMachine Anonymous";
+            }
+
+            StateMachineRegistry.Register(this);
+        }
+
+        #endregion
 
 
         // ==========================================================
