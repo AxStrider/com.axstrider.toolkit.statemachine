@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using Axstrider.Toolkit.StateMachine;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,7 +11,10 @@ namespace AxStrider.Toolkit.StateMachine.EditorOnly
         private Vector2 scrollPosition;
         private string searchFilter = "";
 
-        [MenuItem("Tools/StateMachine Toolkit/Live Visualizer")]
+        private readonly List<AxStateMachine> cachedMachines = new List<AxStateMachine>();
+
+        [MenuItem("Window/AxStrider/StateMachine Toolkit/Live Visualizer")]
+        [MenuItem("Tools/AxStrider/StateMachine Toolkit/Live Visualizer")]
         public static void OpenWindow()
         {
             var window = GetWindow<StateMachineVisualizerWindow>("State Machines Visualizer");
@@ -20,7 +24,6 @@ namespace AxStrider.Toolkit.StateMachine.EditorOnly
 
         private void OnEnable()
         {
-            // Demande le rafraîchissement continu de la fenêtre pendant le jeu
             EditorApplication.update += RepaintWindowDuringPlay;
         }
 
@@ -39,6 +42,12 @@ namespace AxStrider.Toolkit.StateMachine.EditorOnly
 
         private void OnGUI()
         {
+            if (Application.isPlaying)
+            {
+                cachedMachines.Clear();
+                cachedMachines.AddRange(StateMachineRegistry.GetActiveMachines());
+            }
+
             DrawHeader();
 
             if (!Application.isPlaying)
@@ -48,25 +57,7 @@ namespace AxStrider.Toolkit.StateMachine.EditorOnly
             }
 
             DrawSearchBar();
-            DrawStateMachineList();
-        }
 
-        private void DrawHeader()
-        {
-            EditorGUILayout.Space(5);
-            EditorGUILayout.LabelField("State Machines Actives", EditorStyles.boldLabel);
-            EditorGUILayout.LabelField($"Total en cours d'exécution : {StateMachineRegistry.GetActiveMachines().Count}", EditorStyles.miniLabel);
-            EditorGUILayout.Space(5);
-        }                                                         
-
-        private void DrawSearchBar()
-        {
-            searchFilter = EditorGUILayout.TextField("Rechercher (Nom/Objet) :", searchFilter);
-            EditorGUILayout.Space(5);
-        }
-
-        private void DrawStateMachineList()
-        {
             scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
 
             GUIStyle cardStyle = new GUIStyle(GUI.skin.box)
@@ -75,15 +66,25 @@ namespace AxStrider.Toolkit.StateMachine.EditorOnly
                 margin = new RectOffset(0, 0, 4, 4)
             };
 
-            foreach (var machine in StateMachineRegistry.GetActiveMachines())
+            for (int i = 0; i < cachedMachines.Count; i++)
             {
+                var machine = cachedMachines[i];
+                if (machine == null) continue;
+
+                string objName = machine.Name;
+
+                if (!string.IsNullOrEmpty(searchFilter) &&
+                    !objName.ToLower().Contains(searchFilter.ToLower()))
+                {
+                    continue;
+                }
+
                 EditorGUILayout.BeginVertical(cardStyle);
 
-                // Nom et bouton Ping si le owner est un MonoBehaviour
-                if (machine.Owner is MonoBehaviour mono)
+                if (machine.Owner is MonoBehaviour mono && mono != null)
                 {
                     EditorGUILayout.BeginHorizontal();
-                    EditorGUILayout.LabelField(machine.Name, EditorStyles.boldLabel);
+                    EditorGUILayout.LabelField(objName, EditorStyles.boldLabel);
 
                     if (GUILayout.Button("Ping", GUILayout.Width(50)))
                     {
@@ -94,13 +95,31 @@ namespace AxStrider.Toolkit.StateMachine.EditorOnly
                 }
                 else
                 {
-                    EditorGUILayout.LabelField(machine.Name, EditorStyles.boldLabel);
+                    EditorGUILayout.LabelField(objName, EditorStyles.boldLabel);
                 }
 
-                // Chemin d'état
+                GUI.backgroundColor = new Color(0.2f, 0.8f, 0.4f, 0.3f);
                 EditorGUILayout.LabelField($"État actuel : {machine.GetActiveStatePath()}", EditorStyles.textField);
+                GUI.backgroundColor = Color.white;
+
                 EditorGUILayout.EndVertical();
             }
+
+            EditorGUILayout.EndScrollView();
+        }
+
+        private void DrawHeader()
+        {
+            EditorGUILayout.Space(5);
+            EditorGUILayout.LabelField("State Machines Actives", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField($"Total en cours : {(Application.isPlaying ? cachedMachines.Count : 0)}", EditorStyles.miniLabel);
+            EditorGUILayout.Space(5);
+        }
+
+        private void DrawSearchBar()
+        {
+            searchFilter = EditorGUILayout.TextField("Rechercher :", searchFilter);
+            EditorGUILayout.Space(5);
         }
     }
 }
