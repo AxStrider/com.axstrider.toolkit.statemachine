@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Axstrider.Toolkit.StateMachine
 {
-    [AddComponentMenu("StateMachine Toolkit/Debugger")]
+    [AddComponentMenu("AxStateMachine Toolkit/Debugger")]
     public class StateMachineDebugger : MonoBehaviour
     {
         [Tooltip("Glissez un composant ici ou laissez vide pour détecter automatiquement un composant sur ce GameObject.")]
@@ -24,7 +24,7 @@ namespace Axstrider.Toolkit.StateMachine
             // 1. Si une cible spécifique est assignée
             if (targetObject is IStateMachineHolder targetHolder)
             {
-                return targetHolder.GetStateMachine()?.GetActiveStatePath() ?? "StateMachine non initialisée";
+                return targetHolder.GetStateMachine()?.GetActiveStatePath() ?? "AxStateMachine non initialisée";
             }
 
             // 2. Sinon, cherche automatiquement sur le même GameObject

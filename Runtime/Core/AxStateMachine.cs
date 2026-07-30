@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Axstrider.Toolkit.StateMachine
 {
-    public class StateMachine
+    public class AxStateMachine
     {
         public IState CurrentState { get; private set; }
 

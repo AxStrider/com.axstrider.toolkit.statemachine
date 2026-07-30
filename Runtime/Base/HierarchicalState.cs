@@ -2,7 +2,7 @@ namespace Axstrider.Toolkit.StateMachine
 {
     public class HierarchicalState: BaseState
     {
-        public StateMachine SubStateMachine { get; } = new StateMachine();
+        public AxStateMachine SubStateMachine { get; } = new AxStateMachine();
 
         private IState initialSubState;
 
