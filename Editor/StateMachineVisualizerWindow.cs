@@ -52,7 +52,7 @@ namespace AxStrider.Toolkit.StateMachine.EditorOnly
 
             if (!Application.isPlaying)
             {
-                EditorGUILayout.HelpBox("Passez en mode Play pour voir les State Machines actives en temps réel.", MessageType.Info);
+                EditorGUILayout.HelpBox("Switch to Play mode to see the active State Machines in real time.", MessageType.Info);
                 return;
             }
 
@@ -99,7 +99,7 @@ namespace AxStrider.Toolkit.StateMachine.EditorOnly
                 }
 
                 GUI.backgroundColor = new Color(0.2f, 0.8f, 0.4f, 0.3f);
-                EditorGUILayout.LabelField($"État actuel : {machine.GetActiveStatePath()}", EditorStyles.textField);
+                EditorGUILayout.LabelField($"Current state : {machine.GetActiveStatePath()}", EditorStyles.textField);
                 GUI.backgroundColor = Color.white;
 
                 EditorGUILayout.EndVertical();
@@ -111,14 +111,14 @@ namespace AxStrider.Toolkit.StateMachine.EditorOnly
         private void DrawHeader()
         {
             EditorGUILayout.Space(5);
-            EditorGUILayout.LabelField("State Machines Actives", EditorStyles.boldLabel);
-            EditorGUILayout.LabelField($"Total en cours : {(Application.isPlaying ? cachedMachines.Count : 0)}", EditorStyles.miniLabel);
+            EditorGUILayout.LabelField("State Machines Active ", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField($"Running total : {(Application.isPlaying ? cachedMachines.Count : 0)}", EditorStyles.miniLabel);
             EditorGUILayout.Space(5);
         }
 
         private void DrawSearchBar()
         {
-            searchFilter = EditorGUILayout.TextField("Rechercher :", searchFilter);
+            searchFilter = EditorGUILayout.TextField("Search :", searchFilter);
             EditorGUILayout.Space(5);
         }
     }
