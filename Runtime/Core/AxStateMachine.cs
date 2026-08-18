@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-namespace Axstrider.Toolkit.StateMachine
+namespace AxStrider.Toolkit.StateMachine
 {
     public class AxStateMachine
     {

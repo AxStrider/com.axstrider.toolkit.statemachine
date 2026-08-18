@@ -1,4 +1,4 @@
-namespace Axstrider.Toolkit.StateMachine
+namespace AxStrider.Toolkit.StateMachine
 {
     public interface IState
     {

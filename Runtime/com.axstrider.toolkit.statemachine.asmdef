@@ -1,6 +1,6 @@
 {
     "name": "Axstrider.Toolkit.StateMachine",
-    "rootNamespace": "Axstrider.Toolkit.StateMachine",
+    "rootNamespace": "AxStrider.Toolkit.StateMachine",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

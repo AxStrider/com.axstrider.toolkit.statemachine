@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Axstrider.Toolkit.StateMachine
+namespace AxStrider.Toolkit.StateMachine
 {
     [AddComponentMenu("AxStateMachine Toolkit/Debugger")]
     public class StateMachineDebugger : MonoBehaviour

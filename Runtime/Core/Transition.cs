@@ -1,6 +1,6 @@
 using System;
 
-namespace Axstrider.Toolkit.StateMachine
+namespace AxStrider.Toolkit.StateMachine
 {
     public class Transition
     {

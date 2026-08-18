@@ -2,7 +2,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Axstrider.Toolkit.StateMachine.EditorOnly
+namespace AxStrider.Toolkit.StateMachine.EditorOnly
 {
     [CustomEditor(typeof(StateMachineDebugger))]
     public class StateMachineDebuggerEditor : Editor
