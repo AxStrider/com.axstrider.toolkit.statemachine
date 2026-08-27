@@ -15,7 +15,8 @@ namespace AxStrider.Toolkit.StateMachine
         private readonly Dictionary<Type, List<Transition>> transitions = new();
         private readonly List<Transition> anyTransitions = new();
 
-        public event Action<IState, IState> OnStateChanged;
+        public delegate void StateChangedHandler(IState previousState, IState newState);
+        public event StateChangedHandler OnStateChanged;
 
 
         // ──────────────────────────────────────────────────────────
@@ -78,13 +79,13 @@ namespace AxStrider.Toolkit.StateMachine
             if (newState == CurrentState)
                 return;
 
-            var previous = CurrentState;
+            IState previousState = CurrentState;
 
             CurrentState?.OnExit();
             CurrentState = newState;
             CurrentState?.OnEnter();
 
-            OnStateChanged?.Invoke(previous, CurrentState);
+            OnStateChanged?.Invoke(previousState, newState);
         }
 
         public void ClearCurrentState()
@@ -172,7 +173,7 @@ namespace AxStrider.Toolkit.StateMachine
 
             string currentName = CurrentState.GetType().Name;
 
-            if (CurrentState is HierarchicalState hState)
+            if (CurrentState is AxHierarchicalState hState)
             {
                 return $"{currentName}  ►  {hState.SubStateMachine.GetActiveStatePath()}";
             }
@@ -183,7 +184,7 @@ namespace AxStrider.Toolkit.StateMachine
         /// <summary>
         /// Dumps the registered transitions as Mermaid state-diagram syntax — paste the
         /// result into https://mermaid.live (or a markdown file that renders Mermaid) for
-        /// a visual map of this machine's flow. A HierarchicalState target shows up as a
+        /// a visual map of this machine's flow. A AxHierarchicalState target shows up as a
         /// single node here; call ToMermaid() on its own SubStateMachine for its nested
         /// flow, since a static transition list has no live instance to recurse into.
         /// </summary>

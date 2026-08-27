@@ -1,6 +1,6 @@
 namespace AxStrider.Toolkit.StateMachine
 {
-    public class HierarchicalState: BaseState
+    public class AxHierarchicalState: AxState
     {
         public AxStateMachine SubStateMachine { get; } = new AxStateMachine();
 

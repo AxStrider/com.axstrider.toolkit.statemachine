@@ -1,6 +1,6 @@
 namespace AxStrider.Toolkit.StateMachine
 {
-    public abstract class BaseState : IState
+    public abstract class AxState : IState
     {
         public virtual void OnEnter()       { }
         public virtual void OnExit()        { }
