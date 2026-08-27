@@ -4,21 +4,38 @@ namespace AxStrider.Toolkit.StateMachine
     {
         public AxStateMachine SubStateMachine { get; } = new AxStateMachine();
 
+        public bool ResetSubStateOnEnter { get; set; } = true;
+
         private IState initialSubState;
+
 
         public void SetInitialSubState(IState state)
         {
             initialSubState = state;
         }
 
+
+        // ──────────────────────────────────────────────────────────
+        // Lifecycle
+        // ──────────────────────────────────────────────────────────
+        #region Lifecycle
+
         public override void OnEnter()
         {
             base.OnEnter();
 
-            if (initialSubState != null)
+            if (ResetSubStateOnEnter || SubStateMachine.CurrentState == null)
             {
-                SubStateMachine.ChangeState(initialSubState);
+                if (initialSubState != null)
+                {
+                    SubStateMachine.ChangeState(initialSubState);
+                }
             }
+            else
+            {
+                SubStateMachine.CurrentState.OnEnter();
+            }
+            
         }
 
         public override void OnUpdate()
@@ -36,7 +53,15 @@ namespace AxStrider.Toolkit.StateMachine
         public override void OnExit()
         {
             SubStateMachine.CurrentState?.OnExit();
+
+            if (ResetSubStateOnEnter)
+            {
+                SubStateMachine.ClearCurrentState();
+            }
+
             base.OnExit();
         }
+
+        #endregion
     }
 }

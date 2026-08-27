@@ -13,6 +13,12 @@ namespace AxStrider.Toolkit.StateMachine
                 activeMachines.Add(machine);
         }
 
+        public static void Unregister(AxStateMachine machine)
+        {
+            if (machine != null && !activeMachines.Contains(machine))
+                activeMachines.Remove(machine);
+        }
+
         /// <summary>
         /// Returns active state machines and automatically deletes those that are destroyed.
         /// </summary>
