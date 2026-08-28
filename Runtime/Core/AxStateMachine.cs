@@ -10,7 +10,8 @@ namespace AxStrider.Toolkit.StateMachine
     {
         public object Owner { get; }
         public string Name  { get; }
-        public IState CurrentState { get; private set; }
+        public IState CurrentState  { get; private set; }
+        public IState PreviousState { get; private set; }
 
         private readonly Dictionary<Type, List<Transition>> transitions = new();
         private readonly List<Transition> anyTransitions = new();
@@ -63,7 +64,7 @@ namespace AxStrider.Toolkit.StateMachine
             var transition = GetTransition();
             if (transition != null)
             {
-                ChangeState(transition.TargetState);
+                SetState(transition.TargetState);
             }
 
             CurrentState?.OnUpdate();
@@ -74,16 +75,17 @@ namespace AxStrider.Toolkit.StateMachine
             CurrentState?.OnFixedUpdate();
         }
 
-        public void ChangeState(IState newState)
+        public void SetState(IState newState)
         {
             if (newState == CurrentState)
                 return;
 
             IState previousState = CurrentState;
+            previousState?.OnExit();
+            PreviousState = previousState;
 
-            CurrentState?.OnExit();
             CurrentState = newState;
-            CurrentState?.OnEnter();
+            newState?.OnEnter();
 
             OnStateChanged?.Invoke(previousState, newState);
         }

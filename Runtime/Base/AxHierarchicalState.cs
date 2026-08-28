@@ -28,7 +28,7 @@ namespace AxStrider.Toolkit.StateMachine
             {
                 if (initialSubState != null)
                 {
-                    SubStateMachine.ChangeState(initialSubState);
+                    SubStateMachine.SetState(initialSubState);
                 }
             }
             else
